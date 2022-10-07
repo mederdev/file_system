@@ -4,15 +4,14 @@ import { ApiTags } from '@nestjs/swagger';
 import { diskStorage } from 'multer';
 import { editFileName } from 'src/file_storage/file_storage';
 import { FileStorageService } from 'src/file_storage/file_storage.service';
-import { FsApiService } from './fs_api.service';
 import { AdapterService } from '../adapter/adapter.service';
 import { FileDto } from './dto/fileDto';
 import { MonitoringService } from 'src/monitoring/monitoring.service';
-
+import { MetaStorageService } from 'src/meta_storage/meta_storage.service';
 @ApiTags('FileSystem API')
 @Controller('fs-api')
 export class FsApiController {
-	constructor(private mService: MonitoringService, private fileStorageService: FileStorageService, private fsApiService: FsApiService, private adapterService: AdapterService) { }
+	constructor(private mService: MonitoringService, private fileStorageService: FileStorageService, private metaService: MetaStorageService, private adapterService: AdapterService) { }
 
 	@Put('/file')
 	@UseInterceptors(FileInterceptor('file', {
@@ -23,7 +22,7 @@ export class FsApiController {
 	}))
 	async uploadedFile(@UploadedFile() file: Express.Multer.File) {
 		this.mService.checkSize();
-		const res = await this.fsApiService.setMetaData(file);
+		const res = await this.metaService.setMetaData(file);
 		return {
 			status: HttpStatus.OK,
 			message: res,
@@ -47,7 +46,7 @@ export class FsApiController {
 
 	@Get('meta')
 	async getMetaData() {
-		return this.fsApiService.getMetaData();
+		return this.metaService.getMetaData();
 	}
 
 	@Get('/read/:filename')

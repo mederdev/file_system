@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import { setNewValue, getMeta } from './fs_api.repoitory';
+import { setNewValue, getMeta } from 'src/fs_api/fs_api.repoitory';
 
 @Injectable()
-export class FsApiService {
+export class MetaStorageService {
 	async setMetaData(file: Express.Multer.File) {
 		return setNewValue(file);
 	}
