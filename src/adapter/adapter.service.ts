@@ -8,10 +8,6 @@ export const getFixturePath = path.join('/home/mederdev/StudioProjects/FileSyste
 export class AdapterService {
 	constructor(private myLogger: MonitoringService, private fileStorageService: FileStorageService) { };
 
-	async saveFile(Fpath: string) {
-
-	}
-
 	async readFile(Fpath: string) {
 		const localPath = path.join(getFixturePath, Fpath);
 		const res = this.fileStorageService.readFileFromLocal(localPath);
