@@ -7,11 +7,12 @@ import { FileStorageService } from 'src/file_storage/file_storage.service';
 import { FsApiService } from './fs_api.service';
 import { AdapterService } from '../adapter/adapter.service';
 import { FileDto } from './dto/fileDto';
+import { MonitoringService } from 'src/monitoring/monitoring.service';
 
 @ApiTags('FileSystem API')
 @Controller('fs-api')
 export class FsApiController {
-	constructor(private fileStorageService: FileStorageService, private fsApiService: FsApiService, private adapterService: AdapterService) { }
+	constructor(private mService: MonitoringService, private fileStorageService: FileStorageService, private fsApiService: FsApiService, private adapterService: AdapterService) { }
 
 	@Put('/file')
 	@UseInterceptors(FileInterceptor('file', {
@@ -21,6 +22,7 @@ export class FsApiController {
 		})
 	}))
 	async uploadedFile(@UploadedFile() file: Express.Multer.File) {
+		this.mService.checkSize();
 		const res = await this.fsApiService.setMetaData(file);
 		return {
 			status: HttpStatus.OK,
@@ -36,6 +38,7 @@ export class FsApiController {
 	@Get('/file/:filename')
 	async getFile(@Param('filename') fileName, @Res() res) {
 		const response = res.sendFile(fileName, { root: './uploads' });
+
 		return {
 			status: HttpStatus.OK,
 			data: response,

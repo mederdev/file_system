@@ -23,6 +23,7 @@ export class AdapterService {
 		const localPath = path.join(getFixturePath, filename);
 		const res = this.fileStorageService.writeFileToLocal(localPath, value);
 		this.myLogger.stopW();
+		this.myLogger.checkSize();
 		return res;
 	}
 }
